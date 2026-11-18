@@ -252,9 +252,9 @@
       opacity: .4;
     }
 
-    .insect-svg { z-index: 1; width: 112px; height: 112px; transition: transform .35s ease; }
+    .insect-logo { z-index: 1; width: 96px; height: 96px; object-fit: contain; transition: transform .35s ease; }
     .hardware-svg { z-index: 1; width: 112px; height: 94px; transition: transform .35s ease; }
-    .project-card:hover .insect-svg,
+    .project-card:hover .insect-logo,
     .project-card:hover .hardware-svg { transform: scale(1.06); }
 
     .art-hardware {
@@ -445,14 +445,7 @@
       <div class="project-grid" id="project-grid">
         <a class="project-card" href="https://wizkidzai.github.io/pyinsect" target="_blank" rel="noopener noreferrer" aria-label="Open PyInsect in a new tab">
           <div class="card-art art-insect" aria-hidden="true">
-            <svg class="insect-svg" viewBox="0 0 120 120" fill="none" stroke="#d3f36b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M54 20 44 8M66 20l10-12"/>
-              <path d="M48 32c0-8 6-13 12-13s12 5 12 13z" fill="rgba(211,243,107,.22)"/>
-              <path d="M60 34c-18 0-28 14-28 34 0 22 12 40 28 40s28-18 28-40c0-20-10-34-28-34z" fill="rgba(211,243,107,.1)"/>
-              <path d="M60 34v74"/>
-              <path d="M36 54c8 4 16 5 24 5s16-1 24-5" opacity=".7"/>
-              <path d="M33 56 14 46M31 76 10 80M37 96 20 110M87 56l19-10M89 76l21 4M83 96l17 14"/>
-            </svg>
+            <img class="insect-logo" src="assets/pyinsect-logo.svg" alt="">
           </div>
           <div class="card-content">
             <div class="card-meta"><span class="card-index">01 / 03</span><span>AI &amp; nature</span></div>
