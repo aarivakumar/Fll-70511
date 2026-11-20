@@ -480,38 +480,31 @@
 
     .swoosh i {
       flex: 1;
-      transform: translateX(-110%) skewX(-14deg) scaleX(1.4);
+      margin-right: -4vw;
+      transform: translate3d(-130%, 0, 0) skewX(-8deg) scaleX(1.5);
       transform-origin: left;
+      will-change: transform;
+      /* feathered leading edge so stripes melt into each other */
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%);
+      mask-image: linear-gradient(90deg, transparent, #000 14%);
     }
 
     .swoosh { transition: opacity .35s ease; }
-    .swoosh.go i { animation: sweep .9s cubic-bezier(.65, 0, .25, 1) forwards; }
-    .swoosh.fade, .sparks.fade { opacity: 0; }
+    .swoosh.go i { animation: sweep 1.15s cubic-bezier(.45, .05, .25, 1) forwards; }
+    .swoosh.fade { opacity: 0; }
 
-    .shell { transition: transform .9s cubic-bezier(.4, 0, .2, 1), opacity .9s ease, filter .9s ease; }
+    .shell { transition: transform 1.2s cubic-bezier(.4, 0, .2, 1), opacity 1.2s ease, filter 1.2s ease; }
     body.leaving .shell { transform: scale(.96); opacity: .35; filter: blur(3px); }
     .swoosh i:nth-child(1) { background: var(--lime); animation-delay: 0s; }
-    .swoosh i:nth-child(2) { background: var(--blue); animation-delay: .06s; }
-    .swoosh i:nth-child(3) { background: var(--orange); animation-delay: .12s; }
-    .swoosh i:nth-child(4) { background: #ff7ad9; animation-delay: .18s; }
-    .swoosh i:nth-child(5) { background: var(--page); animation-delay: .24s; }
+    .swoosh i:nth-child(2) { background: var(--blue); animation-delay: .1s; }
+    .swoosh i:nth-child(3) { background: var(--orange); animation-delay: .2s; }
+    .swoosh i:nth-child(4) { background: #ff7ad9; animation-delay: .3s; }
+    .swoosh i:nth-child(5) { background: var(--page); animation-delay: .4s; }
 
-    .sparks {
-      position: fixed;
-      inset: 0;
-      z-index: 101;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      visibility: hidden;
-    }
-
-    .sparks.go { visibility: visible; transition: opacity .3s ease; }
-
-    @keyframes sweep { to { transform: translateX(0) skewX(-14deg) scaleX(1.4); } }
+    @keyframes sweep { to { transform: translate3d(0, 0, 0) skewX(-8deg) scaleX(1.5); } }
 
     @media (prefers-reduced-motion: reduce) {
-      .swoosh, .sparks { display: none; }
+      .swoosh { display: none; }
       .card-art::before, .card-art::after { animation: none !important; }
       .hero, .project-card { animation: none !important; }
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -607,7 +600,6 @@
     <span>Team 70511</span>
   </footer>
 
-  <canvas class="sparks" id="sparks" aria-hidden="true"></canvas>
   <div class="swoosh" id="swoosh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
 
   <script>
@@ -619,97 +611,6 @@
     const swoosh = document.querySelector("#swoosh");
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const canvas = document.querySelector("#sparks");
-    const ctx = canvas.getContext("2d");
-    const palette = ["#d3f36b", "#a9d8f4", "#ff9a61", "#ff7ad9", "#fff6a8", "#ffffff"];
-    let particles = [];
-    let rings = [];
-    let raf = 0;
-
-    function burst(x, y, n, spread, speed) {
-      for (let i = 0; i < n; i++) {
-        const a = spread ? Math.random() * Math.PI * 2 : -0.5 + Math.random();
-        const v = speed * (0.3 + Math.random());
-        particles.push({
-          x, y,
-          vx: Math.cos(a) * v + (spread ? 0 : speed * 0.6),
-          vy: Math.sin(a) * v,
-          r: 1.5 + Math.random() * 3.5,
-          life: 0,
-          max: 40 + Math.random() * 40,
-          c: palette[(Math.random() * palette.length) | 0],
-          star: Math.random() < 0.25,
-        });
-      }
-    }
-
-    function runSparks(x, y, duration) {
-      const dpr = devicePixelRatio || 1;
-      const w = innerWidth, h = innerHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      canvas.classList.remove("fade");
-      canvas.classList.add("go");
-      particles = [];
-      rings = [{ x, y, r: 0 }, { x, y, r: -14 }];
-      burst(x, y, 70, true, 11);
-      const start = performance.now();
-
-      const frame = (now) => {
-        const t = now - start;
-        const p = Math.min(t / (duration * 0.75), 1);
-        // Leading edge of the colored bands: emit sparks along it.
-        if (p < 1) burst(p * w * 1.1, Math.random() * h, 6, false, 7);
-
-        ctx.globalCompositeOperation = "destination-out";
-        ctx.fillStyle = "rgba(0,0,0,.22)";
-        ctx.fillRect(0, 0, w, h);
-        ctx.globalCompositeOperation = "source-over";
-
-        rings.forEach((g) => {
-          g.r += 16;
-          if (g.r <= 0) return;
-          ctx.globalAlpha = Math.max(0, 1 - g.r / 520);
-          ctx.strokeStyle = "#ffffff";
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
-          ctx.stroke();
-        });
-
-        particles = particles.filter((q) => q.life < q.max);
-        particles.forEach((q) => {
-          q.life++;
-          q.x += q.vx;
-          q.y += q.vy;
-          q.vx *= 0.985;
-          q.vy = q.vy * 0.985 + 0.05;
-          const k = 1 - q.life / q.max;
-          ctx.globalAlpha = k;
-          ctx.fillStyle = q.c;
-          ctx.shadowColor = q.c;
-          ctx.shadowBlur = 6;
-          ctx.beginPath();
-          if (q.star) {
-            const s = q.r * 2.2 * k;
-            ctx.moveTo(q.x - s, q.y); ctx.lineTo(q.x, q.y - s * .35);
-            ctx.lineTo(q.x + s, q.y); ctx.lineTo(q.x, q.y + s * .35);
-          } else {
-            ctx.arc(q.x, q.y, q.r * k + .5, 0, Math.PI * 2);
-          }
-          ctx.fill();
-        });
-        ctx.shadowBlur = 0;
-        ctx.globalAlpha = 1;
-
-        if (t > duration - 300) canvas.classList.add("fade");
-        if (t < duration) raf = requestAnimationFrame(frame);
-      };
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(frame);
-    }
-
     cards.forEach((card) => {
       card.removeAttribute("target");
       card.addEventListener("click", (e) => {
@@ -718,10 +619,7 @@
         document.body.classList.add("leaving");
         swoosh.classList.remove("fade");
         swoosh.classList.add("go");
-        const r = card.getBoundingClientRect();
-        const hasPoint = e.clientX || e.clientY;
-        runSparks(hasPoint ? e.clientX : r.left + r.width / 2, hasPoint ? e.clientY : r.top + r.height / 2, 1200);
-        setTimeout(() => { location.href = card.href; }, 1250);
+        setTimeout(() => { location.href = card.href; }, 1500);
       });
     });
 
@@ -731,7 +629,6 @@
       swoosh.classList.add("fade");
       setTimeout(() => {
         swoosh.classList.remove("go", "fade");
-        canvas.classList.remove("go", "fade");
       }, 400);
     });
 
