@@ -216,7 +216,7 @@
 
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
       padding-bottom: 76px;
     }
@@ -238,6 +238,7 @@
     .project-card:nth-child(1) { animation-delay: .1s; }
     .project-card:nth-child(2) { animation-delay: .2s; }
     .project-card:nth-child(3) { animation-delay: .3s; }
+    .project-card:nth-child(4) { animation-delay: .4s; }
 
     .project-card:hover {
       transform: translateY(-4px);
@@ -326,6 +327,19 @@
       font-size: 30px;
       box-shadow: 0 0 38px rgba(169, 216, 244, .12), inset 0 0 20px rgba(169, 216, 244, .08);
     }
+
+    .art-temple {
+      background:
+        radial-gradient(circle at 50% 78%, rgba(255, 154, 97, .38), transparent 60%),
+        linear-gradient(180deg, #2a1d1a 0%, #3a2418 55%, #1d1814 100%);
+    }
+
+    .art-temple::before,
+    .art-temple::after { border-color: rgba(255, 154, 97, .26); }
+    .art-temple::after { border-color: rgba(255, 154, 97, .12); }
+
+    .temple-svg { z-index: 1; width: 132px; height: 92px; filter: drop-shadow(0 0 16px rgba(255, 154, 97, .3)); transition: transform .35s ease; }
+    .project-card:hover .temple-svg { transform: scale(1.06); }
 
     .art-arm {
       background: radial-gradient(ellipse at center, #f7f8f4 0%, #e2e4de 100%);
@@ -446,6 +460,10 @@
       font-weight: 600;
     }
 
+    @media (max-width: 1000px) {
+      .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
     @media (max-width: 760px) {
       .hero { gap: 18px; padding: 48px 0 46px; }
       .hero-copy { max-width: 460px; }
@@ -533,7 +551,7 @@
       <div class="projects-head">
         <div class="section-label">
           <h2 id="projects-title">Explore projects</h2>
-          <span class="project-count" id="project-count">03 projects</span>
+          <span class="project-count" id="project-count">04 projects</span>
         </div>
         <label class="search-wrap">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.7"></circle><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
@@ -547,7 +565,7 @@
             <img class="insect-logo" src="assets/pyinsect-logo.svg" alt="">
           </div>
           <div class="card-content">
-            <div class="card-meta"><span class="card-index">01 / 03</span><span>AI &amp; nature</span></div>
+            <div class="card-meta"><span class="card-index">01 / 04</span><span>AI &amp; nature</span></div>
             <h3>PyInsect</h3>
             <p>An AI project exploring the world of insects.</p>
             <div class="card-action"><span>Launch project</span><span class="arrow" aria-hidden="true">↗</span></div>
@@ -572,7 +590,7 @@
             </svg>
           </div>
           <div class="card-content">
-            <div class="card-meta"><span class="card-index">02 / 03</span><span>Hardware</span></div>
+            <div class="card-meta"><span class="card-index">02 / 04</span><span>Hardware</span></div>
             <h3>PyInsect Hardware</h3>
             <p>The hardware web app for the PyInsect project.</p>
             <div class="card-action"><span>Open web app</span><span class="arrow" aria-hidden="true">↗</span></div>
@@ -584,9 +602,28 @@
             <img src="assets/grip-ai-arm-team.png" alt="">
           </div>
           <div class="card-content">
-            <div class="card-meta"><span class="card-index">03 / 03</span><span>Robotics</span></div>
+            <div class="card-meta"><span class="card-index">03 / 04</span><span>Robotics</span></div>
             <h3>Grip AI Arm</h3>
             <p>An AI and robotics project built by our team.</p>
+            <div class="card-action"><span>Launch project</span><span class="arrow" aria-hidden="true">↗</span></div>
+          </div>
+        </a>
+        <a class="project-card" href="https://wizkidzai.github.io/angkor-wat/" target="_blank" rel="noopener noreferrer" aria-label="Open Journey to Angkor Wat in a new tab">
+          <div class="card-art art-temple" aria-hidden="true">
+            <svg class="temple-svg" viewBox="0 0 140 96" fill="none" stroke="#ffb98a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="70" cy="30" r="11" fill="rgba(255,154,97,.25)" stroke="none"/>
+              <path d="M70 16c-4 6-5 12-5 22h10c0-10-1-16-5-22z" fill="rgba(255,154,97,.2)"/>
+              <path d="M50 30c-3 5-4 10-4 18h8c0-8-1-13-4-18zM90 30c-3 5-4 10-4 18h8c0-8-1-13-4-18z" fill="rgba(255,154,97,.16)"/>
+              <path d="M30 40c-3 4-4 8-4 14h8c0-6-1-10-4-14zM110 40c-3 4-4 8-4 14h8c0-6-1-10-4-14z" fill="rgba(255,154,97,.12)"/>
+              <path d="M22 58h96M16 68h108M10 80h120" />
+              <path d="M62 58v10h16V58M52 68v12M88 68v12M70 68v12" stroke-opacity=".7"/>
+              <path d="M6 90h128" stroke-opacity=".5"/>
+            </svg>
+          </div>
+          <div class="card-content">
+            <div class="card-meta"><span class="card-index">04 / 04</span><span>History</span></div>
+            <h3>Journey to Angkor Wat</h3>
+            <p>An interactive journey to the famous temple of Angkor Wat.</p>
             <div class="card-action"><span>Launch project</span><span class="arrow" aria-hidden="true">↗</span></div>
           </div>
         </a>
