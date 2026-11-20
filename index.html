@@ -484,7 +484,12 @@
       transform-origin: left;
     }
 
-    .swoosh.go i { animation: sweep .75s cubic-bezier(.7, 0, .2, 1) forwards; }
+    .swoosh { transition: opacity .35s ease; }
+    .swoosh.go i { animation: sweep .9s cubic-bezier(.65, 0, .25, 1) forwards; }
+    .swoosh.fade, .sparks.fade { opacity: 0; }
+
+    .shell { transition: transform .9s cubic-bezier(.4, 0, .2, 1), opacity .9s ease, filter .9s ease; }
+    body.leaving .shell { transform: scale(.96); opacity: .35; filter: blur(3px); }
     .swoosh i:nth-child(1) { background: var(--lime); animation-delay: 0s; }
     .swoosh i:nth-child(2) { background: var(--blue); animation-delay: .06s; }
     .swoosh i:nth-child(3) { background: var(--orange); animation-delay: .12s; }
@@ -501,7 +506,7 @@
       visibility: hidden;
     }
 
-    .sparks.go { visibility: visible; }
+    .sparks.go { visibility: visible; transition: opacity .3s ease; }
 
     @keyframes sweep { to { transform: translateX(0) skewX(-14deg) scaleX(1.4); } }
 
@@ -644,6 +649,7 @@
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      canvas.classList.remove("fade");
       canvas.classList.add("go");
       particles = [];
       rings = [{ x, y, r: 0 }, { x, y, r: -14 }];
@@ -697,6 +703,7 @@
         ctx.shadowBlur = 0;
         ctx.globalAlpha = 1;
 
+        if (t > duration - 300) canvas.classList.add("fade");
         if (t < duration) raf = requestAnimationFrame(frame);
       };
       cancelAnimationFrame(raf);
@@ -708,16 +715,25 @@
       card.addEventListener("click", (e) => {
         if (reduced || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
         e.preventDefault();
+        document.body.classList.add("leaving");
+        swoosh.classList.remove("fade");
         swoosh.classList.add("go");
         const r = card.getBoundingClientRect();
         const hasPoint = e.clientX || e.clientY;
-        runSparks(hasPoint ? e.clientX : r.left + r.width / 2, hasPoint ? e.clientY : r.top + r.height / 2, 1100);
-        setTimeout(() => { location.href = card.href; }, 1150);
+        runSparks(hasPoint ? e.clientX : r.left + r.width / 2, hasPoint ? e.clientY : r.top + r.height / 2, 1200);
+        setTimeout(() => { location.href = card.href; }, 1250);
       });
     });
 
     // Reset the overlay when returning via the back button (bfcache).
-    addEventListener("pageshow", (e) => { if (e.persisted) { swoosh.classList.remove("go"); canvas.classList.remove("go"); } });
+    addEventListener("pageshow", (e) => { if (!e.persisted) return;
+      document.body.classList.remove("leaving");
+      swoosh.classList.add("fade");
+      setTimeout(() => {
+        swoosh.classList.remove("go", "fade");
+        canvas.classList.remove("go", "fade");
+      }, 400);
+    });
 
     search.addEventListener("input", () => {
       const query = search.value.trim().toLowerCase();
