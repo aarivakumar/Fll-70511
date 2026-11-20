@@ -220,7 +220,7 @@
     .project-card {
       position: relative;
       display: flex;
-      min-height: 365px;
+      min-height: 390px;
       flex-direction: column;
       overflow: hidden;
       border: 1px solid var(--line);
@@ -250,7 +250,7 @@
     .card-art {
       position: relative;
       display: grid;
-      height: 168px;
+      height: 190px;
       flex: 0 0 auto;
       overflow: hidden;
       place-items: center;
@@ -258,27 +258,32 @@
       background: #20241b;
     }
 
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     .card-art::before,
     .card-art::after {
       position: absolute;
       width: 200px;
       height: 200px;
-      border: 1px solid rgba(211, 243, 107, .15);
+      border: 1px dashed rgba(211, 243, 107, .28);
+      animation: spin 40s linear infinite;
       border-radius: 50%;
       content: "";
     }
 
-    .card-art::after { width: 140px; height: 140px; }
+    .card-art::after { width: 140px; height: 140px; border-style: solid; border-color: rgba(211, 243, 107, .14); animation-direction: reverse; }
 
     .art-insect {
       background:
-        #20241b;
+        radial-gradient(circle at 50% 55%, rgba(211, 243, 107, .2), transparent 62%),
+        radial-gradient(rgba(211, 243, 107, .14) 1px, transparent 1.4px) 0 0 / 18px 18px,
+        #1d2218;
     }
 
     .art-insect img {
       z-index: 1;
-      width: 96px;
-      height: 96px;
+      width: 104px;
+      height: 104px;
       object-fit: contain;
       filter: drop-shadow(0 0 14px rgba(211, 243, 107, .24));
     }
@@ -289,17 +294,21 @@
     }
 
     .insect-logo { z-index: 1; width: 96px; height: 96px; object-fit: contain; transition: transform .35s ease; }
-    .hardware-svg { z-index: 1; width: 112px; height: 94px; transition: transform .35s ease; }
+    .hardware-svg { z-index: 1; width: 120px; height: 100px; filter: drop-shadow(0 0 16px rgba(169, 216, 244, .3)); transition: transform .35s ease; }
     .project-card:hover .insect-logo,
     .project-card:hover .hardware-svg { transform: scale(1.06); }
 
     .art-hardware {
       background:
-        linear-gradient(135deg, transparent 48%, rgba(169, 216, 244, .08) 49%, transparent 50%),
-        linear-gradient(45deg, transparent 48%, rgba(169, 216, 244, .08) 49%, transparent 50%),
-        #1c2325;
-      background-size: 34px 34px;
+        radial-gradient(circle at 50% 55%, rgba(169, 216, 244, .2), transparent 62%),
+        linear-gradient(rgba(169, 216, 244, .07) 1px, transparent 1px) 0 0 / 24px 24px,
+        linear-gradient(90deg, rgba(169, 216, 244, .07) 1px, transparent 1px) 0 0 / 24px 24px,
+        #192226;
     }
+
+    .art-hardware::before,
+    .art-hardware::after { border-color: rgba(169, 216, 244, .26); }
+    .art-hardware::after { border-color: rgba(169, 216, 244, .12); }
 
     .hardware-mark {
       z-index: 1;
@@ -315,11 +324,22 @@
     }
 
     .art-arm {
-      background: radial-gradient(ellipse at center, #f1f2ed 0%, #e7e8e4 100%);
+      background: radial-gradient(ellipse at center, #f7f8f4 0%, #e2e4de 100%);
     }
 
-    .art-arm::before,
-    .art-arm::after { display: none; }
+    .art-arm::after {
+      display: block;
+      inset: 0;
+      width: auto;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(16, 18, 14, .18));
+      animation: none;
+      pointer-events: none;
+    }
+
+    .art-arm::before { display: none; }
 
     .art-arm img {
       width: 100%;
@@ -444,6 +464,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
+      .card-art::before, .card-art::after { animation: none !important; }
       .hero, .project-card { animation: none !important; }
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
     }
@@ -494,13 +515,19 @@
 
         <a class="project-card" href="https://aarivakumar.github.io/pyinsect-hardware/webapp" target="_blank" rel="noopener noreferrer" aria-label="Open PyInsect Hardware web app in a new tab">
           <div class="card-art art-hardware" aria-hidden="true">
-            <svg class="hardware-svg" viewBox="0 0 120 100" fill="none" stroke="#a9d8f4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M44 28l5-9h22l5 9" fill="rgba(169,216,244,.12)"/>
-              <rect x="12" y="28" width="96" height="62" rx="12" fill="rgba(169,216,244,.1)"/>
-              <circle cx="60" cy="59" r="22"/>
-              <circle cx="60" cy="59" r="13" fill="rgba(169,216,244,.18)"/>
-              <circle cx="55" cy="54" r="3.5" fill="#a9d8f4" stroke="none"/>
-              <circle cx="94" cy="42" r="3.5" fill="#a9d8f4" stroke="none"/>
+            <svg class="hardware-svg" viewBox="0 0 120 100" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <defs>
+                <linearGradient id="hw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d5eefc"/><stop offset="1" stop-color="#6fb4de"/></linearGradient>
+                <radialGradient id="lens" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#a9d8f4" stop-opacity=".55"/><stop offset="1" stop-color="#a9d8f4" stop-opacity=".05"/></radialGradient>
+              </defs>
+              <path d="M44 28l5-9h22l5 9" stroke="url(#hw)" stroke-width="3" fill="rgba(169,216,244,.14)"/>
+              <rect x="12" y="28" width="96" height="62" rx="12" stroke="url(#hw)" stroke-width="3" fill="rgba(169,216,244,.08)"/>
+              <circle cx="60" cy="59" r="23" stroke="url(#hw)" stroke-width="3"/>
+              <circle cx="60" cy="59" r="15" stroke="#a9d8f4" stroke-width="1.5" stroke-opacity=".6" fill="url(#lens)"/>
+              <circle cx="60" cy="59" r="6" fill="#0f1a1f" stroke="#a9d8f4" stroke-width="1.5"/>
+              <circle cx="55" cy="53" r="3" fill="#fff" fill-opacity=".85"/>
+              <circle cx="94" cy="42" r="3.5" fill="#d3f36b"/>
+              <path d="M20 40h10M20 46h6" stroke="#a9d8f4" stroke-width="2" stroke-opacity=".5"/>
             </svg>
           </div>
           <div class="card-content">
